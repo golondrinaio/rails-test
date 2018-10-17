@@ -2,6 +2,10 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
+
+     
+
+
 version: 2
 jobs:
   build:
@@ -46,12 +50,8 @@ jobs:
           command: |
             mkdir /tmp/test-results
             TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
-            
-            bundle exec rspec --format progress \
-                            --format RspecJunitFormatter \
-                            --out /tmp/test-results/rspec.xml \
-                            --format progress \
-                            $TEST_FILES
+            RAILS_ENV=test bundle exec rspec -r rspec_junit_formatter --format RspecJunitFormatter -o $CIRCLE_TEST_REPORTS/rspec/junit.xml
+
 
       # collect reports
       - store_test_results:
